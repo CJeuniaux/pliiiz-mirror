@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Leaflet CSS for maps */
+@import 'leaflet/dist/leaflet.css';
+
+/* Global reset for overflow issues */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Minimal base overrides for Tailwind */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply text-foreground antialiased;
+    font-family: 'Poppins', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Safe area for mobile devices */
+@layer utilities {
+  .pb-safe-bottom {
+    padding-bottom: calc(var(--plz-tabbar-h) + var(--plz-safe-bottom) + 18px);
+  }
+  
+  .pt-safe-top {
+    padding-top: var(--plz-safe-top);
+  }
+}

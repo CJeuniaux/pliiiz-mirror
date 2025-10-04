@@ -1,0 +1,14 @@
+[
+  {
+    "id": "news-1",
+    "title": "Migration réussie vers Unsplash",
+    "date": "2025-09-15",
+    "body": "Toutes les images sont désormais fournies par l'API Unsplash avec attribution conforme. Plus de photos carrées et de meilleure qualité pour illustrer les profils ! Cette amélioration permet d'avoir des images en haute résolution, parfaitement adaptées à chaque catégorie de préférences. L'intégration respecte les conditions d'utilisation d'Unsplash et assure une meilleure expérience visuelle pour tous nos utilisateurs."
+  },
+  {
+    "id": "news-2",
+    "title": "Nouveau : Page d'accueil",
+    "date": "2025-09-16",
+    "body": "Nous avons ajouté une page d'accueil avec conseils du jour, explications rapides et actualités pour mieux comprendre Pliiiz. Cette nouvelle interface permet de découvrir facilement les fonctionnalités principales de l'application et de rester informé des dernières nouveautés. Les conseils personnalisés vous aident à optimiser votre profil et à créer des listes de cadeaux encore plus précises."
+  }
+]

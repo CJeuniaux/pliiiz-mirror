@@ -1,0 +1,212 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/use-auth";
+import { UnsplashMentionsModal } from "@/components/ui/unsplash-mentions-modal";
+import pliiizLogoWhite from "@/assets/branding/pliiiz-logo-white-final.svg";
+import gHome from "@/assets/g-home.webp";
+
+export function SimpleLoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+  const [mentionsOpen, setMentionsOpen] = useState(false);
+  
+  const { signIn, resetPassword } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      return;
+    }
+
+    setIsLoading(true);
+    await signIn(email, password);
+    setIsLoading(false);
+    // Navigation is handled by the useEffect in Login.tsx
+  };
+
+  const handleForgotPassword = () => {
+    setShowForgotPassword(true);
+    setResetEmail(email);
+  };
+
+  const handlePasswordReset = async () => {
+    if (!resetEmail) return;
+    
+    setIsResetting(true);
+    const { error } = await resetPassword(resetEmail);
+    setIsResetting(false);
+    
+    if (!error) {
+      setShowForgotPassword(false);
+      setResetEmail("");
+    }
+  };
+
+  if (showForgotPassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center">
+            <img 
+              src={pliiizLogoWhite}
+              alt="PLIIIZ"
+              className="h-16 w-auto mx-auto mb-8 filter drop-shadow-lg"
+            />
+          </div>
+
+          <Card className="bg-white/15 backdrop-blur-xl border-white/30 shadow-2xl">
+            <CardContent className="p-6 space-y-5">
+              <div className="text-center space-y-2">
+                <h1 className="text-3xl font-bold text-white">Mot de passe oublié</h1>
+                <p className="text-white/90 text-base">
+                  Entrez votre email pour recevoir un lien de réinitialisation
+                </p>
+              </div>
+
+              <div className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="resetEmail" className="text-white font-medium text-sm block">Email</label>
+                <Input
+                  id="resetEmail"
+                  type="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="votre@email.com"
+                  disabled={isResetting}
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/25 focus:border-white/50 h-12"
+                />
+                </div>
+
+                <Button 
+                  className="w-full h-14 text-base font-bold rounded-full bg-gradient-to-r from-[#ff9c6b] to-[#ff7cab] hover:opacity-90 transition-opacity shadow-lg" 
+                  onClick={handlePasswordReset}
+                  disabled={isResetting || !resetEmail}
+                >
+                  {isResetting ? "Envoi..." : "Envoyer le lien"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="text-center">
+            <button 
+              onClick={() => setShowForgotPassword(false)}
+              className="text-white/90 hover:text-white transition-colors"
+              disabled={isResetting}
+            >
+              Retour à la connexion
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <img 
+            src={pliiizLogoWhite}
+            alt="PLIIIZ"
+            className="h-16 w-auto mx-auto mb-8 filter drop-shadow-lg"
+          />
+        </div>
+
+        <Card className="bg-white/15 backdrop-blur-xl border-white/30 shadow-2xl">
+          <CardContent className="p-6 space-y-5">
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-bold text-white">Connexion</h1>
+              <p className="text-white/90 text-base">
+                Connectez-vous à votre compte PLIIIZ
+              </p>
+            </div>
+
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-white font-medium text-sm block">Email</label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="charlotte.j@kikk.be"
+                  disabled={isLoading}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/25 focus:border-white/50 h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-white font-medium text-sm block">Mot de passe</label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••"
+                  disabled={isLoading}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/25 focus:border-white/50 h-12"
+                />
+                <div className="text-right">
+                  <button 
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-white/90 text-sm hover:text-white transition-colors"
+                    disabled={isLoading}
+                  >
+                    Mot de passe oublié ?
+                  </button>
+                </div>
+              </div>
+
+              <Button 
+                className="w-full h-14 text-base font-bold rounded-full bg-gradient-to-r from-[#ff9c6b] to-[#ff7cab] hover:opacity-90 transition-opacity shadow-lg" 
+                onClick={handleLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? "Connexion..." : "Se connecter"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="text-center">
+          <p className="text-white/90">
+            Pas encore de compte ?{" "}
+            <button 
+              onClick={() => navigate('/register')}
+              className="text-white font-semibold hover:underline"
+              disabled={isLoading}
+            >
+              Créer un compte
+            </button>
+          </p>
+        </div>
+
+        <footer className="text-center pt-4">
+          <button
+            onClick={() => setMentionsOpen(true)}
+            className="text-white/70 text-sm hover:text-white/90 transition-colors"
+          >
+            Mentions & crédits photo
+          </button>
+        </footer>
+
+        <UnsplashMentionsModal 
+          open={mentionsOpen} 
+          onOpenChange={setMentionsOpen} 
+        />
+      </div>
+    </div>
+  );
+}
