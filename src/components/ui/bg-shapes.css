@@ -1,0 +1,39 @@
+/* Background Shapes CSS */
+:root{
+  --plz-bg-grad: linear-gradient(180deg,#7b4bff 0%,#b05cff 40%,#ff7cab 100%);
+  --plz-shapes-opacity: .30;
+  --plz-shapes-blend: screen; /* overlay, screen, lighten… */
+}
+
+.plz-shapes{
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .plz-shapes {
+    opacity: 1;
+  }
+}
+.plz-shapes svg{
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: var(--plz-shapes-blend);
+}
+.plz-shapes__group{ opacity: var(--plz-shapes-opacity); }
+
+/* Animation subtile (désactivée si reduced motion) */
+.plz-shapes--anim .plz-blob{ animation: plz-float 10s ease-in-out infinite; }
+.plz-shapes--anim .plz-blob--1{ animation-duration: 12s; animation-delay: .3s; }
+.plz-shapes--anim .plz-blob--2{ animation-duration: 14s; animation-delay: .6s; }
+.plz-shapes--anim .plz-blob--3{ animation-duration: 16s; animation-delay: .9s; }
+@keyframes plz-float{
+  0%,100%{ transform: translate3d(0,0,0) scale(1); }
+  50%{ transform: translate3d(1.5%, -1.5%, 0) scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce){
+  .plz-shapes--anim .plz-blob{ animation: none; }
+}

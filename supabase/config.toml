@@ -1,0 +1,35 @@
+project_id = "afyxwaprjecyormhnncl"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[functions.generate-gift-image]
+verify_jwt = false
+
+[functions.images-generate]
+verify_jwt = false
+
+[functions.images-purge-cache]
+verify_jwt = false
+
+[functions.places-proxy]
+verify_jwt = false
+
+[functions.regift-api]
+verify_jwt = false
+
+[functions.search-nearby-stores]
+verify_jwt = false
+
+[functions.birthday-notifications]
+verify_jwt = false
+
+[functions.test-birthday-notification]
+verify_jwt = false
+
+[functions.regenerate-images]
+verify_jwt = false

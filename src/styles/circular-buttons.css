@@ -1,0 +1,82 @@
+/**
+ * Design tokens for circular action buttons
+ * Ensures consistent appearance across all back/plus/options buttons
+ */
+
+:root {
+  /* Circular Button Tokens */
+  --circular-btn-bg: #F2F4F7;
+  --circular-btn-bg-hover: #E5E7EB;
+  --circular-btn-bg-active: #D1D5DB;
+  --circular-btn-bg-disabled: #F9FAFB;
+  
+  --circular-btn-text: #374151;
+  --circular-btn-text-hover: #1F2937;
+  --circular-btn-text-disabled: #9CA3AF;
+  
+  --circular-btn-border: #E5E7EB;
+  --circular-btn-border-hover: #D1D5DB;
+  --circular-btn-border-focus: hsl(var(--primary));
+  
+  --circular-btn-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --circular-btn-shadow-hover: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  
+  /* Dark mode overrides */
+  @media (prefers-color-scheme: dark) {
+    --circular-btn-bg: #374151;
+    --circular-btn-bg-hover: #4B5563;
+    --circular-btn-bg-active: #6B7280;
+    --circular-btn-bg-disabled: #1F2937;
+    
+    --circular-btn-text: #F3F4F6;
+    --circular-btn-text-hover: #FFFFFF;
+    --circular-btn-text-disabled: #6B7280;
+    
+    --circular-btn-border: #4B5563;
+    --circular-btn-border-hover: #6B7280;
+  }
+}
+
+/* Utility classes for circular buttons */
+.circular-btn {
+  @apply rounded-full shadow-sm transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  
+  background-color: var(--circular-btn-bg);
+  color: var(--circular-btn-text);
+  border: 1px solid var(--circular-btn-border);
+  box-shadow: var(--circular-btn-shadow);
+  focus-ring-color: var(--circular-btn-border-focus);
+}
+
+.circular-btn:hover:not(:disabled) {
+  background-color: var(--circular-btn-bg-hover);
+  color: var(--circular-btn-text-hover);
+  border-color: var(--circular-btn-border-hover);
+  box-shadow: var(--circular-btn-shadow-hover);
+}
+
+.circular-btn:active:not(:disabled) {
+  background-color: var(--circular-btn-bg-active);
+  transform: scale(0.95);
+}
+
+.circular-btn:disabled {
+  background-color: var(--circular-btn-bg-disabled);
+  color: var(--circular-btn-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Size variants */
+.circular-btn-sm {
+  @apply h-8 w-8;
+}
+
+.circular-btn-md {
+  @apply h-10 w-10;
+}
+
+.circular-btn-lg {
+  @apply h-12 w-12;
+}

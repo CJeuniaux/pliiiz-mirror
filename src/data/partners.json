@@ -1,0 +1,57 @@
+{
+  "vinyl": [
+    {
+      "name": "Fnac",
+      "logo": "/partners/fnac.svg",
+      "url": "https://www.fnac.com/SearchResult/ResultList.aspx?Search=vinyle&utm_source=pliiiz"
+    }
+  ],
+  "book": [
+    {
+      "name": "Cultura",
+      "logo": "/partners/cultura.svg", 
+      "url": "https://www.cultura.com/livres.html?utm_source=pliiiz"
+    },
+    {
+      "name": "Fnac",
+      "logo": "/partners/fnac.svg",
+      "url": "https://www.fnac.com/livre?utm_source=pliiiz"
+    }
+  ],
+  "wine": [
+    {
+      "name": "Nicolas",
+      "logo": "/partners/nicolas.svg",
+      "url": "https://www.nicolas.com/?utm_source=pliiiz"
+    }
+  ],
+  "jewelry": [
+    {
+      "name": "Pandora",
+      "logo": "/partners/pandora.svg",
+      "url": "https://fr.pandora.net/?utm_source=pliiiz"
+    }
+  ],
+  "tech": [
+    {
+      "name": "Darty",
+      "logo": "/partners/darty.svg",
+      "url": "https://www.darty.com/?utm_source=pliiiz"
+    }
+  ],
+  "fashion": [
+    {
+      "name": "Zalando",
+      "logo": "/partners/zalando.svg",
+      "url": "https://www.zalando.fr/?utm_source=pliiiz"
+    }
+  ],
+  "cosmetics": [
+    {
+      "name": "Sephora",
+      "logo": "/partners/sephora.svg",
+      "url": "https://www.sephora.fr/?utm_source=pliiiz"
+    }
+  ],
+  "default": []
+}

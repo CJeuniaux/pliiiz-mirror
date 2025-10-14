@@ -1,0 +1,1129 @@
+@tailwind base;
+
+/* === Variables CSS globales === */
+:root {
+  --plz-outer-margin: 15px; /* Marge extérieure (limites rouges) */
+}
+
+/* Conteneur standardisé pour tout le contenu de l'app */
+.plz-container {
+  width: 100%;
+  max-width: calc(100% - (var(--plz-outer-margin) * 2));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+/* Admin mode styles */
+.admin-bubble {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 9999;
+  display: grid;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(125, 76, 255, 0.25);
+}
+
+.btn-admin {
+  background: linear-gradient(135deg, #7D4CFF, #B06BFF);
+  color: white;
+  font-weight: 700;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-admin:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 76, 255, 0.4);
+}
+
+.btn-admin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-ok {
+  color: #A7F3D0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.admin-ko {
+  color: #FCA5A5;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.admin-hint {
+  font-size: 12px;
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* --- admin regen cadeau --- */
+.admin-regen-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF9D4D, #FF6B35);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.admin-regen-overlay:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.admin-regen-overlay:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* === AUTOCOMPLETE PLIiiz === */
+.pref-autocomplete {
+  position: relative;
+  z-index: 5000;
+}
+
+.pref-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 5001;
+  font-size: 14px;
+}
+
+.pref-input::placeholder {
+  color: rgba(255,255,255,.6);
+}
+
+.pref-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; 
+  right: 0;
+  z-index: 9999;
+  background: rgba(30,30,40,.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,.35);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.pref-opt {
+  padding: 10px 12px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pref-opt.muted { 
+  opacity: .8; 
+  cursor: default; 
+}
+
+.pref-opt.active { 
+  background: rgba(255,255,255,.15); 
+}
+
+.pref-opt.create { 
+  color: #ffd7b0; 
+  font-weight: 600; 
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+@tailwind components;
+@tailwind utilities;
+
+/* ===== A. BASE SÛRE ===== */
+html, body { height: 100%; margin: 0; }
+body { 
+  background: transparent !important;
+  font-size: 16px; /* Base size augmentée pour mobile */
+}
+#root { position: relative; z-index: 1; }
+
+/* Paragraphes plus lisibles sur mobile */
+p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Dropdowns/Popovers/Select au-dessus de tout */
+[data-radix-popper-content-wrapper],
+[role="listbox"],
+[role="menu"],
+[data-radix-select-content],
+.popover-content,
+.dropdown-menu {
+  z-index: 9999 !important;
+}
+
+/* ===== B. CALQUE DE FOND OBLIGATOIRE ===== */
+#pliiiz-bg{
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url('/bg-app-1920.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* ===== C. VIRER TOUT GRADIENT/BG concurrents ===== */
+/* 1) wrappers fréquents */
+#root, .app, .page, .screen, .container, .layout, .content {
+  background: transparent !important;
+}
+
+/* 2) styles inline (via CSSOM) */
+* { background-image: none !important; }
+*:where(:not(#pliiiz-bg)) { background: transparent !important; }
+
+/* 3) utilitaires Tailwind/gradients courants */
+[class*="bg-gradient"], [class*="from-"], [class*="via-"], [class*="to-"],
+body[class*="bg-"], html[class*="bg-"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Exception: onboarding SEULEMENT reste blanc opaque */
+[class*="onboarding"] section,
+.onboarding, .welcome, .tutorial, .page-onboarding {
+  background: white !important;
+  color: #333;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Cards onboarding opaques */
+.onboarding .card, .welcome .card, .tutorial .card,
+[class*="onboarding"] .card {
+  background: #fff !important;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  color: #333;
+}
+
+/* 4) si un composant impose un overlay sombre/clair */
+.overlay, .scrim, .backdrop {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+/* E. Dropdowns/menus OPAQUES (exceptions au reset global) */
+/* Applique un fond blanc solide et supprime tout blur/transparence héritée */
+.plz-dropdown,
+[role="listbox"],
+.dropdown-menu,
+.popover-content,
+[data-radix-select-content] {
+  background: #ffffff !important;
+  color: #152223 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.18) !important;
+}
+/* Items: conserver un hover lisible malgré le reset global */
+.plz-dropdown li,
+[role="listbox"] li {
+  background: #ffffff !important;
+  color: #152223 !important;
+}
+.plz-dropdown li:hover,
+.plz-dropdown li[aria-selected="true"],
+[role="listbox"] li:hover,
+[role="listbox"] li[aria-selected="true"] {
+  background: #ECFDF5 !important; /* emerald-50 */
+  color: #064E3B !important;      /* emerald-900 */
+}
+
+/* ===== D. "Téléphone" 360px (si utilisé) transparent ===== */
+.app-shell{
+  max-width: 360px; margin: 0 auto;
+  min-height: 100svh; position: relative; overflow: hidden;
+  background: transparent !important;
+}
+@supports (height: 100dvh){ .app-shell{ min-height: 100dvh; } }
+
+/* Desktop : cadre (option, garder) */
+@media (min-width: 768px){
+  .app-shell{
+    border-radius: 26px;
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+  }
+}
+
+/* Fullscreen admin pages: expand shell to full width */
+#pliiiz-app:has(#diag-admin-page) {
+  max-width: none;
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* === STYLES SPÉCIAUX PLIiiZ — dégradés doux === */
+
+/* Bouton orange doux - même style que pliiz-btn mais avec fond orange */
+.btn-orange {
+  /* Hérite de tous les styles pliiz-btn */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 24px;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  white-space: nowrap;
+  /* Fond orange au lieu de blanc */
+  background: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important;
+  background-image: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important;
+  color: #fff !important;
+}
+.btn-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255, 126, 47, 0.3);
+}
+.btn-orange:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn-orange:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Bouton icône orange - parfaitement rond */
+.btn-icon-orange {
+  display: grid;
+  place-items: center;
+  padding: 0 !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important;
+  background-image: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important;
+  color: #fff !important;
+  flex-shrink: 0;
+}
+.btn-icon-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255, 126, 47, 0.3);
+}
+.btn-icon-orange:active:not(:disabled) {
+  transform: translateY(0);
+}
+.btn-icon-orange:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* Switch pills — solid colors, no transparency */
+.plz-switch {
+  background: #cfd1d4 !important; /* off state solid grey */
+}
+.plz-switch[data-state="checked"] {
+  background: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important; /* on state orange */
+}
+.plz-switch .plz-switch-thumb {
+  background: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.9) !important;
+}
+
+/* Header orange doux */
+.header-orange {
+  background: linear-gradient(135deg, #FFA45E 0%, #FF7C4D 100%) !important;
+  background-image: linear-gradient(135deg, #FFA45E 0%, #FF7C4D 100%) !important;
+  color: #fff;
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  box-shadow: 0 4px 12px rgba(255, 124, 77, 0.3);
+}
+
+/* Tabs container: force white background over global reset */
+.tabs-white {
+  background-color: #ffffff !important;
+  border-radius: 9999px !important; /* same as rounded-full buttons */
+}
+
+
+/* Option : variante "glass + gradient" (ex. cartes, panneaux) */
+.glass-gradient {
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 14px;
+}
+
+/* Bouton onglet mauve doux */
+.tab-mauve {
+  background: linear-gradient(135deg, #B68CFF 0%, #9B6FFF 100%) !important;
+  background-image: linear-gradient(135deg, #B68CFF 0%, #9B6FFF 100%) !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 3px 10px rgba(155, 111, 255, 0.25);
+}
+.tab-mauve:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* === GLASSMORPHISM PLIIIZ === */
+
+/* Style général : toutes les cartes, blocs, sections */
+/* IMPORTANT: width 100% sans max-width pour cohérence avec /profile */
+.card, .bloc, .panel, .section, .content-box, .profile-card, .wishlist-card,
+.pliiz-card, .pliiz-list > * {
+  background: rgba(255,255,255,0.14) !important;
+  border: 1px solid rgba(255,255,255,0.35) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  color: #fff;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  width: 100% !important; /* Largeur pleine du conteneur parent */
+  max-width: none !important; /* Pas de max-width individuel */
+  box-sizing: border-box !important;
+}
+
+/* Variante légère (si certaines cartes doivent être plus claires) */
+.card-light {
+  background: rgba(255,255,255,0.20) !important;
+  border-color: rgba(255,255,255,0.45) !important;
+}
+
+/* Override pour auth screens: DOIVENT rester opaques blancs */
+.auth-screen .card,
+.login-screen .card,
+.signup-screen .card,
+.reset-password .card {
+  background: #fff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  color: #333;
+}
+
+/* Admin Mode Styles */
+.admin-bubble {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(12px);
+  border: 2px solid hsl(var(--primary) / 0.3);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 32px hsl(var(--primary) / 0.2);
+}
+
+.admin-btn {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
+  color: hsl(var(--primary-foreground));
+  font-weight: 700;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-btn:hover {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--primary) / 0.7));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+}
+
+.admin-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.admin-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.admin-ok {
+  color: hsl(142 76% 36%);
+  background: hsl(142 76% 36% / 0.1);
+}
+
+.admin-ko {
+  color: hsl(0 84% 60%);
+  background: hsl(0 84% 60% / 0.1);
+}
+
+.admin-hint {
+  font-size: 12px;
+  opacity: 0.7;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+}
+
+/* === MODALS GLASSMORPHISM === */
+
+/* Style pour tous les DialogContent / modals */
+[role="dialog"],
+.modal-content,
+[data-radix-dialog-content] {
+  background: linear-gradient(135deg, rgba(182, 140, 255, 0.25) 0%, rgba(155, 111, 255, 0.20) 100%) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+  color: #fff !important;
+}
+
+/* Titres de modals en blanc */
+[role="dialog"] h2,
+[role="dialog"] h3,
+.modal-content h2,
+.modal-content h3 {
+  color: #fff !important;
+}
+
+/* Textes des modals en blanc */
+[role="dialog"] p,
+[role="dialog"] label,
+.modal-content p,
+.modal-content label {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Exception: header de profil sans glassmorphism */
+.profile-header-section {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Exception: section préférences du profil sans glassmorphism sur le conteneur */
+.profile-prefs-section {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Exception: cartes de partage de profil sans glassmorphism */
+.share-profile-card {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Exception: header des notifications sans glassmorphism */
+.notifications-header {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Exception: section conseil du jour sur offrir sans glassmorphism */
+.offrir-conseil-section {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+
+
+/* ===== ONBOARDING: LAYOUT PLEIN ÉCRAN ===== */
+.page-onboarding {
+  /* occupe tout l'écran du téléphone, sans bords */
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto; /* 1: image flex, 2: sheet auto */
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #fff; /* évite de voir le fond de l'app sur les côtés */
+  --onb-radius: 26px;
+  overflow: hidden;
+  z-index: 50; /* au-dessus du contenu app */
+}
+
+/* Retire TOUT padding global/gutters lorsque l'onboarding est affiché */
+.app-scroll:has(.page-onboarding) { padding: 0 !important; }
+.app-scroll > .page-onboarding { margin: 0 !important; }
+
+/* Désactive la debug grid uniquement ici */
+.app-shell.debug-grid .page-onboarding::before,
+.app-shell.debug-grid .page-onboarding::after { display: none !important; }
+
+/* HERO image full-bleed (row 1) */
+.onb-hero {
+  position: relative;
+  overflow: hidden;
+}
+.onb-hero > img,
+.onb-hero > picture,
+.onb-hero > video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+
+/* SHEET blanc (row 2) — arrondi/ombre */
+.onb-sheet {
+  background: #fff !important;
+  color: #2b2b2b !important;
+  border-top-left-radius: var(--onb-radius);
+  border-top-right-radius: var(--onb-radius);
+  padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 40vh;
+}
+
+/* Titre / texte onboarding */
+.onb-title { 
+  font-size: 22px; 
+  line-height: 1.2; 
+  font-weight: 800; 
+  margin: 6px 0 10px; 
+  color: rgb(31 41 55 / 0.8) !important; /* gray-800 80% opacity */
+  text-align: center;
+  white-space: pre-line;
+}
+.onb-text  { 
+  font-size: 15px; 
+  line-height: 1.5; 
+  margin: 0 0 16px; 
+  color: rgb(31 41 55 / 0.8) !important; /* gray-800 80% opacity */
+  text-align: center;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Bouton orange — RESTAURE même si un reset l'écrase */
+.btn-orange,
+.page-onboarding .btn-orange {
+  background: linear-gradient(135deg, #FF9E5F 0%, #FF7E2F 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 14px 18px !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  box-shadow: 0 8px 24px rgba(255,126,47,.25) !important;
+  transition: opacity .2s ease, transform .15s ease !important;
+  cursor: pointer;
+}
+
+/* Boutons onboarding fullwidth */
+.page-onboarding .btn-orange:not(.rounded-full) {
+  width: 100%;
+  border-radius: 26px !important;
+}
+
+.page-onboarding .btn-orange:hover { 
+  opacity:.95 !important; 
+  transform: translateY(-1px) !important; 
+}
+
+/* Bouton "Passer" en haut (safe-area) */
+.onb-skip {
+  position: absolute; z-index: 5;
+  top: max(12px, env(safe-area-inset-top)); right: 12px;
+  padding: 8px 14px; border-radius: 999px; font-weight: 700;
+  color:#fff !important; background: rgba(0,0,0,.25);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.35);
+  cursor: pointer;
+  transition: background 0.2s;
+  width: auto;
+}
+.onb-skip:hover { background: rgba(0,0,0,.35); }
+
+/* Progress indicator */
+.onb-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.onb-progress-dot {
+  height: 4px;
+  border-radius: 999px;
+  transition: all 0.3s;
+  background: #d1d5db;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.onb-progress-dot.active {
+  width: 32px;
+  background: #FF7E2F;
+}
+.onb-progress-dot:not(.active) {
+  width: 8px;
+}
+
+/* Masque la TABBAR uniquement sur onboarding */
+.page-onboarding + .app-tabbar { display: none !important; }
+
+/* S'il existe un padding-bottom global pour la tabbar, neutralise-le ici */
+.page-onboarding { --tabbar-h: 0px; }
+
+/* Option: si des sections internes ont perdu leur radius, on le force */
+.page-onboarding .section,
+.page-onboarding .card { border-radius: var(--onb-radius) !important; }
+
+/* Neutralise les paddings sur containers internes */
+.page-onboarding .container, 
+.page-onboarding .content { 
+  padding: 0 !important; 
+  margin: 0 !important; 
+}
+
+/* Force absolu sur le titre du modal de regift */
+.gift-reuse-modal :is(h1,h2,h3,.modal-title,[data-heading],[role="heading"]) {
+  color: #1F2937 !important;           /* gray-800 */
+  -webkit-text-fill-color: #1F2937 !important; /* neutralise bg-clip-text */
+  text-shadow: none !important;
+}
+.gift-reuse-modal :is(h1,h2,h3,.modal-title,[data-heading]) * {
+  color: inherit !important;            /* neutralise spans internes */
+  -webkit-text-fill-color: inherit !important;
+}
+
+/* Force colors for the regift tip modal */
+.gift-reuse-modal h3,
+.gift-reuse-modal p {
+  color: #1F2937 !important; /* Tailwind gray-800 */
+}
+/* Exception: cartes d'édition de profil sans glassmorphism */
+.edit-profile-card {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* === Admin Mode Bubble === */
+.admin-bubble {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 9999;
+  display: grid;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: adminBubbleIn 0.3s ease-out;
+}
+
+@keyframes adminBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.btn-admin {
+  background: linear-gradient(135deg, #7D4CFF, #B06BFF);
+  color: #fff;
+  font-weight: 700;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.btn-admin:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 76, 255, 0.4);
+}
+
+.btn-admin:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.admin-status {
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.admin-ok {
+  color: #A7F3D0;
+  background: rgba(167, 243, 208, 0.1);
+}
+
+.admin-ko {
+  color: #FCA5A5;
+  background: rgba(252, 165, 165, 0.1);
+}
+
+.admin-hint {
+  font-size: 12px;
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* Admin multi-select overlays */
+.gift-select-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10000;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.gift-select-overlay input {
+  display: none;
+}
+
+.gift-select-overlay span {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid #fff;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.gift-select-overlay input:checked + span {
+  background: #7D4CFF;
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(125, 76, 255, 0.35);
+}
+
+/* Bulk regeneration bar */
+.bulk-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  z-index: 10001;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: rgba(20, 20, 30, 0.85);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.bulk-bar-count {
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+.bulk-bar-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.bulk-bar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bulk-bar-btn-primary {
+  background: linear-gradient(135deg, #7D4CFF, #B06BFF);
+  color: #fff;
+}
+
+.bulk-bar-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 76, 255, 0.4);
+}
+
+.bulk-bar-btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.bulk-bar-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Admin gift selection overlay */
+.gift-select-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10000;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.gift-select-overlay input {
+  display: none;
+}
+
+.gift-select-overlay span {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid #fff;
+  background: transparent;
+}
+
+.gift-select-overlay input:checked + span {
+  background: #7D4CFF;
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(125, 76, 255, 0.35);
+}
+
+/* Bulk regeneration bar */
+.bulk-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  z-index: 10001;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: rgba(20, 20, 30, 0.65);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+  backdrop-filter: blur(10px);
+}
+
+.btn-admin {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-admin:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-admin-primary {
+  background: linear-gradient(135deg, #7D4CFF, #B06BFF);
+  color: white;
+}
+
+.btn-admin-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 76, 255, 0.4);
+}
+
+.btn-admin-secondary {
+  background: #444;
+  color: white;
+}
+
+.btn-admin-secondary:hover:not(:disabled) {
+  background: #555;
+}
+
+/* === AUTOCOMPLETE PLIiiz === */
+.pref-autocomplete {
+  position: relative;
+  z-index: 1; /* the popup is now portaled with fixed positioning */
+}
+
+.pref-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10000 !important; /* garde l'input visible même si pop flotte */
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.pref-input:focus {
+  outline: none;
+  border-color: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.18);
+}
+
+.pref-input::placeholder {
+  color: rgba(255,255,255,.6);
+}
+
+.pref-pop {
+  position: fixed; /* Portal: position fixed to escape stacking contexts */
+  top: auto;
+  left: 0; 
+  right: auto;
+  z-index: 10001 !important; /* 👉 assure qu'il survole toutes les cards */
+  background: rgba(30,30,40,.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,.35);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.pref-opt {
+  padding: 10px 12px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pref-opt.muted { 
+  opacity: .8; 
+  cursor: default; 
+}
+
+.pref-opt.active { 
+  background: rgba(255,255,255,.15); 
+}
+
+.pref-opt.create { 
+  color: #ffd7b0; 
+  font-weight: 600; 
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.pref-opt:not(.muted):hover {
+  background: rgba(255,255,255,.12);
+}
+
+/* ===== Status Icon solid backgrounds (override global transparent) ===== */
+.status-icon--accepted { background-color: #00C853 !important; background-image: none !important; }
+.status-icon--pending  { background-color: #BDBDBD !important; background-image: none !important; }
+.status-icon--declined { background-color: #f87171 !important; background-image: none !important; }
+

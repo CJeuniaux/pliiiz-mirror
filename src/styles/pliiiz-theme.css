@@ -1,0 +1,827 @@
+/* ===== Pliiiz – Thème global ===== */
+:root {
+  /* === Système d'alignement strict === */
+  --plz-max-width: 420px;        /* Largeur max du contenu */
+  --plz-outer-margin: 15px;      /* Bords écran → lignes rouges */
+  --plz-green-gutter: 15px;      /* Offset rouge → vert (lignes vertes) */
+  --plz-card-padding: 10px;      /* Padding interne uniforme des cartes */
+  
+  /* Dégradé violet → rose → orange comme référence */
+  --plz-bg-grad: linear-gradient(180deg, #7b4bff 0%, #b05cff 40%, #ff7cab 100%);
+  --plz-shapes-opacity: .35;
+  --plz-shapes-blend: screen;
+  --plz-shape-a: #ff9c6b;
+  --plz-shape-b: #b05cff;
+  --plz-shape-c: #ff7cab;
+  --plz-card-bg: rgba(255,255,255,0.15);
+  --plz-glass: rgba(255,255,255,0.18);
+  --plz-border: rgba(255,255,255,0.3);
+  --plz-text: #ffffff;
+  --plz-radius: 24px;
+  --plz-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  --plz-blur: 12px;
+  --plz-spacing: 16px;
+  --plz-btn-grad: linear-gradient(135deg, #ff7cab, #ff9c6b);
+  --plz-tabbar-h: 80px;
+  --plz-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --plz-safe-top: env(safe-area-inset-top, 0px);
+  
+  /* Legacy vars pour compatibilité */
+  --pliiz-bg-start: #7b4bff;
+  --pliiz-bg-mid:   #b05cff;
+  --pliiz-bg-end:   #ff7cab;
+  --pliiz-surface:  rgba(255,255,255,0.15);
+  --pliiz-white:    #ffffff;
+  --pliiz-text:     #ffffff;
+  --pliiz-muted:    rgba(255,255,255,0.85);
+  --pliiz-shadow:   0 8px 30px rgba(0,0,0,0.2);
+  --pliiz-radius-xl: 32px;
+  --pliiz-radius-lg: 24px;
+  --pliiz-radius-md: 20px;
+  --pliiz-radius-pill: 999px;
+  --pliiz-font: 'Poppins', 'Inter', 'SF Pro Text', system-ui, -apple-system, sans-serif;
+}
+
+/* Layout global et scroll */
+html, body, #root {
+  height: 100%;
+  overflow: auto !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container principal de l'app */
+.plz-app {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Conteneur ROUGE - largeur max centrée avec marges de 15px - SOURCE DE VÉRITÉ */
+.plz-container {
+  width: calc(100% - 2 * var(--plz-outer-margin)); /* 100% - 30px = crée 15px de chaque côté */
+  max-width: var(--plz-max-width); /* 420px max */
+  margin-inline: auto; /* Centré avec les marges calculées */
+  padding-inline: 0;
+  box-sizing: border-box;
+  position: relative;
+  /* Les bords du conteneur = lignes rouges à x=15px et x=viewport-15px */
+}
+
+/* Frame de contenu avec padding rouge strict */
+.plz-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  margin: 0;
+  min-height: calc(100dvh - var(--plz-tabbar-h, 80px));
+  padding-inline: var(--plz-outer-margin); /* 15px = lignes rouges */
+  padding-block-start: 0;
+  padding-block-end: calc(var(--plz-tabbar-h, 80px) + 20px);
+  box-sizing: border-box;
+}
+
+/* Background global fixe */
+.plz-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--plz-bg-grad);
+  pointer-events: none;
+}
+
+/* Couche blobs (1) — radial-gradients floutés en overlay */
+.plz-bg::after {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 120px at 12% 14%, var(--plz-shape-a) 0%, transparent 60%),
+    radial-gradient(circle 110px at 82% 20%, var(--plz-shape-b) 0%, transparent 60%),
+    radial-gradient(circle 160px at 38% 78%, var(--plz-shape-c) 0%, transparent 60%),
+    radial-gradient(circle 90px at 92% 68%, var(--plz-shape-a) 0%, transparent 60%);
+  filter: blur(28px);
+  opacity: var(--plz-shapes-opacity);
+  mix-blend-mode: var(--plz-shapes-blend);
+}
+
+/* Option : micro "respiration" très subtile (désactivée si reduced-motion) */
+@keyframes plzFloat {
+  0%,100% { transform: translate3d(0,0,0) scale(1); }
+  50%     { transform: translate3d(1.2%, -1.2%, 0) scale(1.02); }
+}
+@media (prefers-reduced-motion: no-preference){
+  .plz-bg::after { animation: plzFloat 14s ease-in-out infinite; }
+}
+
+/* Debug : formes plus visibles pour QA */
+html.plz-shapes-debug .plz-bg { outline: 2px solid lime; }
+html.plz-shapes-debug .plz-bg::after {
+  opacity: .85 !important;
+  mix-blend-mode: normal !important;
+  filter: blur(16px) !important;
+  outline: 2px solid cyan;
+}
+
+/* Typography globale */
+.pliiz-ui {
+  font-family: var(--pliiz-font);
+  color: var(--pliiz-text);
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Titres */
+.pliiz-ui h1, .pliiz-ui h2, .pliiz-ui h3 { 
+  color: var(--pliiz-white); 
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  font-family: var(--pliiz-font);
+}
+
+.pliiz-ui h1 { font-size: 26px; font-weight: 700; }
+.pliiz-ui h2 { font-size: 24px; font-weight: 600; }
+.pliiz-ui h3 { font-size: 20px; font-weight: 600; }
+
+/* Cartes glassmorphiques - LIMITES VERTES (30px-345px) */
+.pliiz-card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  padding: 16px; /* Padding uniforme augmenté */
+  color: var(--pliiz-white);
+  margin-bottom: 16px;
+  width: 100%; /* Largeur de la frame verte (déjà 30-345px via plz-content) */
+  max-width: none; /* Pas de max-width individuel - contrôlé par parent */
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
+.pliiz-card--xl {
+  padding: 32px 28px;
+  max-width: 420px;
+  width: 100%;
+}
+
+/* Labels et inputs */
+.pliiz-label {
+  display: block; 
+  font-size: 14px; 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+  color: var(--pliiz-white);
+  font-family: var(--pliiz-font);
+}
+
+.pliiz-input, .pliiz-select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--pliiz-white);
+  font-size: 15px;
+  font-family: var(--pliiz-font);
+  transition: all 0.2s ease;
+}
+
+.pliiz-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.pliiz-input:focus, .pliiz-select:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.25);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+}
+
+.pliiz-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px 16px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--pliiz-white);
+  font-size: 15px;
+  font-family: var(--pliiz-font);
+  resize: vertical;
+}
+
+/* Boutons */
+.pliiz-btn {
+  width: 100%; 
+  padding: 16px 24px;
+  border-radius: 999px;
+  background: var(--plz-btn-grad);
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--pliiz-font);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(255,124,171,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.pliiz-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(255,124,171,0.5);
+}
+
+.pliiz-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pliiz-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pliiz-btn--secondary, .pliiz-btn--ghost {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.pliiz-btn--ghost:hover, .pliiz-btn--secondary:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Tabs - largeur verte (100% de la frame verte) */
+.pliiz-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  margin: 0 0 16px 0; /* Plus de margin horizontale */
+  backdrop-filter: blur(var(--plz-blur));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: visible;
+  width: 100%; /* Largeur verte complète */
+}
+
+.pliiz-tab {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: #ffffff;
+  text-align: center;
+  position: relative;
+  font-family: var(--pliiz-font);
+}
+
+.pliiz-tab.is-active {
+  background: #ffffff;
+  color: #7b4bff;
+  font-weight: 700;
+}
+
+.pliiz-tab:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Bottom nav - aligné strictement sur grille, sans translateX */
+.pliiz-bottomnav {
+  position: fixed; 
+  bottom: 0; 
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100%;
+  display: grid; 
+  grid-template-columns: repeat(5,1fr); 
+  gap: 8px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px var(--plz-outer-margin); /* Bords rouges */
+  padding-bottom: calc(12px + var(--plz-safe-bottom));
+  border-top: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+  z-index: 50;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pliiz-bottomnav a, .pliiz-bottomnav button {
+  color: var(--pliiz-white); 
+  text-align: center; 
+  text-decoration: none; 
+  border: 0; 
+  background: transparent;
+  cursor: pointer; 
+  transition: all 0.2s ease;
+  font-family: var(--pliiz-font);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.pliiz-bottomnav .is-active { 
+  opacity: 1;
+  color: #fff;
+}
+
+/* Badges (tags préférences) */
+.pliiz-badge {
+  display: inline-flex; 
+  align-items: center; 
+  padding: 10px 16px;
+  border-radius: var(--pliiz-radius-pill);
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: var(--pliiz-white);
+  font-size: 14px;
+  font-family: var(--pliiz-font);
+  font-weight: 500;
+}
+
+/* Listes de contacts/demandes - ALIGNÉES SUR VERTES (pas de padding, géré par parent) */
+.pliiz-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0; /* AUCUN padding - déjà géré par .plz-content */
+  margin: 0;
+  padding-block-end: 24px;
+  width: 100%; /* Force la largeur pleine du parent */
+  box-sizing: border-box;
+}
+
+.pliiz-list-item { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 16px; 
+}
+
+.pliiz-avatar { 
+  width: 72px; 
+  height: 72px; 
+  border-radius: 50%; 
+  border: 4px solid white; 
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Auth screens */
+.pliiz-auth-container {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 32px;
+  overflow-y: auto;
+}
+
+.pliiz-auth-logo {
+  height: 80px;
+  width: auto;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+}
+
+.pliiz-auth-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.pliiz-auth-subtitle {
+  font-size: 16px;
+  text-align: center;
+  opacity: 0.9;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+.pliiz-link {
+  color: var(--pliiz-white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.pliiz-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* AppBar + Back button - aligné sur lignes vertes */
+.plz-appbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: var(--plz-max-width); /* 420px centré */
+  margin: 0 auto;
+  padding-block: 12px;
+  padding-inline: var(--plz-green-gutter); /* 15px = lignes vertes */
+  background: transparent;
+  border-bottom: none;
+  box-sizing: border-box;
+}
+
+.plz-iconbtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--plz-border);
+  background: var(--plz-glass);
+  color: var(--plz-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.plz-iconbtn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.plz-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  color: var(--plz-text);
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* Page title - dans l'appbar à côté du back */
+.plz-page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* Alias .plz-card = .pliiz-card pour compatibilité */
+.plz-card {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 24px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+  padding: 16px; /* Padding uniforme augmenté */
+  backdrop-filter: blur(12px);
+  width: 100%; /* Bords = lignes vertes */
+  max-width: none; /* Pas de max-width individuel - contrôlé par parent */
+  margin-inline: 0; /* Pas de marge horizontale */
+  margin-block-end: 16px;
+  box-sizing: border-box;
+  color: var(--pliiz-white);
+}
+
+/* Cards de préférences - alignées sur limites VERTES (30-345px) */
+.card-like,
+.card-avoid,
+.card-ideas,
+.card-sizes,
+.card-brands {
+  width: 100% !important; /* 100% de la zone verte */
+  max-width: none !important; /* Pas de max-width individuel */
+  box-sizing: border-box !important;
+  margin: 0 0 16px 0 !important;
+}
+
+/* Row card - bords sur lignes vertes, padding interne uniforme */
+.plz-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px; /* Padding uniforme augmenté */
+  min-height: 96px;
+  gap: 12px;
+  width: 100%; /* Bords = lignes vertes */
+  margin-inline: 0; /* Pas de marge horizontale */
+  margin-block-end: 16px;
+  box-sizing: border-box;
+}
+
+.plz-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.plz-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  flex: 0 0 56px;
+}
+
+.plz-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plz-avatar-ph {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+
+.plz-card-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.plz-card-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plz-card-sub {
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plz-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.plz-pill {
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--plz-glass);
+  border: 1px solid var(--plz-border);
+}
+
+/* Section title - aligné au bord vert (left: 0 dans la frame verte = 30px absolu) */
+.plz-section-title {
+  margin: 24px 0 12px;
+  font-weight: 700;
+  color: var(--plz-text);
+  padding-inline: 0; /* Aligné naturellement au vert */
+}
+
+/* Section header - pas de padding horizontal */
+.plz-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block: 16px 12px;
+  margin-inline: 0; /* Pas de marge horizontale */
+  padding-inline: 0; /* Pas de padding horizontal */
+}
+
+/* Form fields */
+.plz-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.plz-label {
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.plz-input {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.30);
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-family: var(--pliiz-font);
+  font-size: 15px;
+}
+
+.plz-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.plz-input:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.22);
+}
+
+.plz-hint {
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.plz-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.plz-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #fff;
+  margin: 16px 0;
+  padding-inline: 0; /* Aligné au bord vert (30px absolu) */
+}
+
+/* Header principal - aligné sur les limites ROUGES (outer margin) */
+.plz-header-main {
+  position: relative;
+  background: linear-gradient(135deg, #ff7cab, #ff9c6b);
+  color: #fff;
+  border-radius: 18px;
+  padding: 18px 20px; /* Padding interne */
+  box-shadow: 0 10px 30px rgba(255,124,171,.35);
+  /* Alignement aux bords ROUGES */
+  width: calc(100% - 2 * var(--plz-outer-margin));
+  max-width: var(--plz-max-width);
+  margin-inline: auto;
+  margin-block: var(--plz-outer-margin) 24px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.plz-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 8px;
+}
+
+.plz-logo {
+  height: 48px; /* Augmenté de 32px à 48px */
+  width: auto;
+}
+
+.plz-header-spacer {
+  flex: 1;
+}
+
+.plz-header-spacer {
+  flex: 1;
+}
+
+.plz-tagline {
+  font-size: 18px; /* Augmenté de 16px à 18px */
+  font-weight: 600; /* Plus bold */
+  white-space: normal; /* Permettre le retour à la ligne */
+  text-align: right;
+  line-height: 1.3;
+}
+
+.plz-tagline-dots {
+  display: inline-block;
+  margin: 0 2px;
+}
+
+@media (max-width: 360px) {
+  .plz-tagline { font-size: 15px; }
+  .plz-logo { height: 42px; }
+}
+
+/* Diagnostic page */
+.plz-diag {
+  position: relative;
+  min-height: 100dvh;
+  overflow-y: auto;
+  padding: 24px;
+  background: var(--plz-bg-grad);
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+.plz-diag h1 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.plz-diag h2 {
+  margin-top: 24px;
+  font-size: 18px;
+}
+.plz-diag table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+.plz-diag th, .plz-diag td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.plz-diag pre {
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+  overflow-x: auto;
+  max-height: 200px;
+}
+.plz-clean {
+  margin-top: 24px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7cab, #ff9c6b);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* === Système d'alignement sur grille === */
+/* Offset rouge→vert : 15px | Padding cartes : 10px */
+
+/* Suppression des marges contradictoires UNIQUEMENT (pas le padding) */
+.plz-card,
+.plz-card-row,
+.plz-section,
+.plz-list {
+  margin-inline: 0 !important;
+  /* IMPORTANT: Ne pas forcer padding-inline à 0, sinon le padding des cartes ne prend pas */
+}
+
+/* Pas de gap horizontal sur le contenu interne, seulement vertical */
+.plz-card-inner,
+.plz-card-content {
+  margin-inline: 0 !important;
+  /* IMPORTANT: Ne pas forcer padding-inline à 0 */
+}
+
+/* Debug visuel (temporaire) */
+.plz-content {
+  /* outline: 2px solid cyan; */
+}
+
+.plz-card,
+.plz-card-row,
+.plz-header-main {
+  /* outline: 2px solid yellow; */
+}
+
+/* Chat override */
+body:has(lovable-chat[open]) .pliiz-bottomnav {
+  display: none;
+}
